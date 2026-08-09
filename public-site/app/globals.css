@@ -1,0 +1,269 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: oklch(0.99 0 0);
+  --foreground: oklch(0.15 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0 0);
+  --primary: oklch(0.35 0.12 285);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.96 0 0);
+  --secondary-foreground: oklch(0.15 0 0);
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.5 0 0);
+  --accent: oklch(0.55 0.24 25);
+  --accent-foreground: oklch(0.99 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.9 0 0);
+  --input: oklch(0.9 0 0);
+  --ring: oklch(0.35 0.12 285);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.5rem;
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  /* Added Sagaljet brand colors */
+  --sagaljet-purple: #422f7e;
+  --sagaljet-red: #e20613;
+}
+
+.dark {
+  /* Base dark color: #212121 */
+  --background: #212121;
+  --foreground: #f5f5f5;
+
+  --card: #2d2d2d;
+  --card-foreground: #f5f5f5;
+
+  --popover: #2d2d2d;
+  --popover-foreground: #f5f5f5;
+
+  --primary: #7c4dff;
+  --primary-foreground: #ffffff;
+
+  --secondary: #383838;
+  --secondary-foreground: #f5f5f5;
+
+  --muted: #383838;
+  --muted-foreground: #9e9e9e;
+
+  --accent: #ff7043;
+  --accent-foreground: #ffffff;
+
+  --destructive: #ef5350;
+  --destructive-foreground: #ffffff;
+
+  --border: #424242;
+  --input: #383838;
+  --ring: #7c4dff;
+
+  /* Charts */
+  --chart-1: #7c4dff;
+  --chart-2: #26a69a;
+  --chart-3: #ffca28;
+  --chart-4: #ec407a;
+  --chart-5: #ff7043;
+
+  /* Sidebar */
+  --sidebar: #1a1a1a;
+  --sidebar-foreground: #f5f5f5;
+  --sidebar-primary: #7c4dff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #2d2d2d;
+  --sidebar-accent-foreground: #f5f5f5;
+  --sidebar-border: #424242;
+  --sidebar-ring: #7c4dff;
+}
+
+@theme inline {
+  --font-sans: "Geist", "Geist Fallback";
+  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  @keyframes spotlight-pulse {
+    0%,
+    100% {
+      opacity: 0.5;
+      transform: scale(0.95);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes navbar-slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes portfolio-slide-up {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-50%);
+    }
+  }
+
+  @keyframes portfolio-slide-down {
+    0% {
+      transform: translateY(-50%);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes logo-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-33.333%);
+    }
+  }
+
+  .animate-spotlight-pulse {
+    animation: spotlight-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-navbar-slide-down {
+    animation: navbar-slide-down 0.3s ease-out;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.2s ease-out;
+  }
+
+  .animate-portfolio-slide-up {
+    animation: portfolio-slide-up 30s linear infinite;
+  }
+
+  .animate-portfolio-slide-down {
+    animation: portfolio-slide-down 30s linear infinite;
+  }
+
+  .animate-logo-scroll-mobile {
+    animation: logo-scroll 15s linear infinite;
+  }
+
+  .animate-logo-scroll-tablet {
+    animation: logo-scroll 20s linear infinite;
+  }
+
+  .animate-logo-scroll-desktop {
+    animation: logo-scroll 30s linear infinite;
+  }
+
+  .decorative-text {
+    position: relative;
+    display: inline-block;
+  }
+
+  .decorative-text::before {
+    content: "• • • • • •";
+    position: absolute;
+    top: -12px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 8px;
+    letter-spacing: 8px;
+    color: oklch(0.45 0.14 285);
+    opacity: 0.6;
+  }
+
+  .decorative-text::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(
+      to right,
+      oklch(0.35 0.12 285),
+      oklch(0.45 0.14 285),
+      oklch(0.55 0.24 25),
+      oklch(0.6 0.26 25)
+    );
+    border-radius: 3px;
+  }
+}

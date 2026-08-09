@@ -1,0 +1,399 @@
+// Define the datasource
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Define the generator
+generator client {
+  provider = "prisma-client-js" // This generates the Prisma Client
+}
+
+// Define the Role enum
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+// Define the User model
+model user {
+  id       Int      @id @default(autoincrement())
+  userName String
+  email    String   @unique
+  password String
+  role     Role     @default(USER)
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
+
+// Define the Project model
+model project {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  slug        String?
+  imageUrl    String[]
+
+  link       String?
+  createAt   DateTime @default(now())
+  updateAt   DateTime @updatedAt
+  industry   String?
+  order      Int?
+  categoryId Int
+  category   category @relation(fields: [categoryId], references: [id])
+
+  client String
+}
+
+model Logo {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  imageUrl    String
+  color       String?
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+}
+
+// Define the Team model
+model team {
+  id          Int      @id @default(autoincrement())
+  name        String
+  skill       String
+  description String?
+  order       Int?
+  imageUrl    String // Storing the image URL instead of photo
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+}
+
+// Define the Client model
+model client {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  logoUrl     String // Storing the logo URL
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+}
+
+// category Model
+
+model category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+
+  //relationship
+  project project[]
+}
+
+//job model
+
+model job {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  link        String
+  isActive    Boolean  @default(true)
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+}
+
+// model event
+// prisma/schema.prisma
+
+model Event {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  location    String?
+  link        String?
+  client      String?
+  startAt     DateTime
+  endAt       DateTime?
+  imageUrl    String[]
+  slug        String?   @unique
+  isActive    Boolean   @default(true)
+  createAt    DateTime  @default(now())
+  updateAt    DateTime  @updatedAt
+}
+
+model blog {
+  id       Int      @id @default(autoincrement())
+  title    String
+  content  String
+  slug     String?
+  author   String
+  image    String?
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
+
+model Printing {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique // Billboard, Poster, A4, etc.
+  size        String // 24x36, 8.5x11, etc. (Optional description)
+  description String?
+  price       Float // Price for this printing type
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("printings")
+}
+
+// design category
+model CategoryDesign {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  createAt    DateTime @default(now())
+  updateAt    DateTime @updatedAt
+
+  //relationship
+  design Design[]
+}
+
+//designs 
+
+model Design {
+  id                Int                @id @default(autoincrement())
+  title             String
+  slug              String?            @unique
+  price             Float              @default(0.00)
+  displayOrder      Int                @default(0)
+  description       String?
+  images            String[]
+  isPrintable       Boolean            @default(true)
+  createdAt         DateTime           @default(now())
+  updateAt          DateTime           @updatedAt
+  CategoryDesign    CategoryDesign     @relation(fields: [categoryDesignId], references: [id], onDelete: Cascade)
+  categoryDesignId  Int
+  Order             Order[]
+  features          Feature[]
+  banners           Banner[]
+  sideCards         SideCard[]
+  productComponents ProductComponent[]
+}
+
+model ComponentType {
+  id      Int               @id @default(autoincrement())
+  name    String // e.g. "Size", "Material", "Finishing"
+  options ComponentOption[]
+}
+
+model ComponentOption {
+  id     Int                @id @default(autoincrement())
+  value  String // e.g. "3.5 x 2 inch", "2 x 6 ft", "Matte", "Glossy"
+  typeId Int
+  type   ComponentType      @relation(fields: [typeId], references: [id], onDelete: Cascade)
+  usedBy ProductComponent[]
+}
+
+model ProductComponent {
+  id         Int    @id @default(autoincrement())
+  productId  Int
+  optionId   Int
+  extraPrice Float? // if +$2 for glossy finish, etc.
+
+  design Design          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  option ComponentOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+}
+
+model Banner {
+  id           Int      @id @default(autoincrement())
+  title        String
+  subtitle     String
+  label        String
+  url          String?
+  image        String
+  discount     Float? // Discount percentage (e.g., 20 for 20%)
+  discountType String?  @default("percentage") // "percentage" or "fixed"
+  order        Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relation to Design
+  Design   Design? @relation(fields: [designId], references: [id], onDelete: Cascade)
+  designId Int?
+
+  @@map("banners")
+}
+
+model BannerProjects {
+  id           Int      @id @default(autoincrement())
+  title        String
+  subtitle     String
+  label        String
+  url          String?
+  image        String
+  discount     Float? // Discount percentage (e.g., 20 for 20%)
+  discountType String?  @default("percentage") // "percentage" or "fixed"
+  order        Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relation to Design
+
+  @@map("bannersprojects")
+}
+
+model BannerDesign {
+  id           Int      @id @default(autoincrement())
+  title        String
+  subtitle     String
+  label        String
+  url          String?
+  image        String
+  discount     Float? // Discount percentage (e.g., 20 for 20%)
+  discountType String?  @default("percentage") // "percentage" or "fixed"
+  order        Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relation to Design
+
+  @@map("bannersdesign")
+}
+
+model BannerEvents {
+  id           Int      @id @default(autoincrement())
+  title        String
+  subtitle     String
+  label        String
+  url          String?
+  image        String
+  discount     Float? // Discount percentage (e.g., 20 for 20%)
+  discountType String?  @default("percentage") // "percentage" or "fixed"
+  order        Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("bannersevents")
+}
+
+model BannerBlogs {
+  id           Int      @id @default(autoincrement())
+  title        String
+  subtitle     String
+  label        String
+  url          String?
+  image        String
+  discount     Float? // Discount percentage (e.g., 20 for 20%)
+  discountType String?  @default("percentage") // "percentage" or "fixed"
+  order        Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("bannersblogs")
+}
+
+model BannerAbout {
+  id           Int      @id @default(autoincrement())
+  title        String
+  subtitle     String
+  label        String
+  url          String?
+  image        String
+  discount     Float? // Discount percentage (e.g., 20 for 20%)
+  discountType String?  @default("percentage") // "percentage" or "fixed"
+  order        Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("bannersabout")
+}
+
+model BannerContact {
+  id           Int      @id @default(autoincrement())
+  title        String
+  subtitle     String
+  label        String
+  url          String?
+  image        String
+  discount     Float? // Discount percentage (e.g., 20 for 20%)
+  discountType String?  @default("percentage") // "percentage" or "fixed"
+  order        Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("bannersContact")
+}
+
+// Side Card Model - Connected to Design
+model SideCard {
+  id           Int      @id @default(autoincrement())
+  label        String
+  title        String
+  buttonText   String   @default("Order Now")
+  badge        String?
+  image        String? // Optional custom image, otherwise use design image
+  discount     Float? // Discount percentage or amount
+  discountType String?  @default("percentage") // "percentage" or "fixed"
+  order        Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relation to Design
+  Design   Design? @relation(fields: [designId], references: [id], onDelete: Cascade)
+  designId Int?
+
+  @@map("side_cards")
+}
+
+model Feature {
+  id        Int    @id @default(autoincrement())
+  name      String // e.g. "Material"
+  value     String // e.g. "Glossy"
+  extraCost Float  @default(0)
+  designId  Int
+  design    Design @relation(fields: [designId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id         String   @id @default(cuid())
+  designId   Int
+  design     Design   @relation(fields: [designId], references: [id])
+  size       String
+  quantity   Int
+  color      String
+  customText String?
+  status     String   @default("pending")
+  totalPrice Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model OrderDesign {
+  id          Int      @id @default(autoincrement())
+  title       String
+  price       Float
+  images      String[]
+  size        String?
+  postType    PostType @default(FACEBOOK_POST)
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum PostType {
+  FACEBOOK_POST
+  INSTAGRAM_POST
+  INSTAGRAM_STORY
+  TIKTOK
+  YOUTUBE_THUMBNAIL
+  TWITTER
+  LINKEDIN
+  OTHER
+}

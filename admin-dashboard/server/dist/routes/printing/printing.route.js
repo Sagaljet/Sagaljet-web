@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const printing_controller_1 = require("../../controllers/printing/printing.controller");
+const router = (0, express_1.Router)();
+router.get("/printings", printing_controller_1.getPrintings);
+router.get("/printing/:id", printing_controller_1.getPrinting);
+router.post("/printing", printing_controller_1.addPrinting);
+router.put("/printing/:id", printing_controller_1.editPrinting);
+router.delete("/printing/:id", printing_controller_1.deletePrinting);
+exports.default = router;

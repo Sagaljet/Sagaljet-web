@@ -21,18 +21,29 @@ import orderDesignRoutes from "./routes/order_design/orderDesign.routes";
 const app = express();
 dotenv.config();
 const port = process.env.PORT;
+const allowedOrigins = [
+  "https://www.sagaljet.net",
+  "https://sagaljet.net",
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "https://sagaljet-alpha.vercel.app",
+  "https://sagaljet-web-vgvq.vercel.app",
+  "https://admin-sagaljet.vercel.app",
+  "https://admin.sagaljet.net",
+];
+
 app.use(
   cors({
-    origin: [
-      "https://api.sagaljet.net/api",
-      "https://www.sagaljet.net",
-      "https://sagaljet.net",
-      "http://localhost:3000",
-      "http://localhost:5173",
-      "https://sagaljet-alpha.vercel.app",
-      "https://admin-sagaljet.vercel.app",
-      "https://admin.sagaljet.net",
-    ],
+    origin(origin, callback) {
+      // Allow non-browser tools (no Origin) and known frontends
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      // Allow Vercel preview / production *.vercel.app deployments
+      if (/^https:\/\/([a-z0-9-]+\.)*vercel\.app$/i.test(origin)) {
+        return callback(null, true);
+      }
+      return callback(null, false);
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
@@ -58,4 +69,9 @@ app.use("/api/banners", banner);
 app.use("/api/side-cards", sidecard);
 app.use("/api/order-designs", orderDesignRoutes);
 
-app.listen(port, () => console.log(`server running ${port}`));
+// Local/dev: listen on PORT. Vercel: export the app as a serverless handler.
+if (process.env.VERCEL !== "1") {
+  app.listen(port, () => console.log(`server running ${port}`));
+}
+
+export default app;

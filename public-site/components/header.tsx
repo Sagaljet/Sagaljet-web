@@ -138,15 +138,16 @@ export default function Navbar() {
                   onProductSelect={() => setIsOpen(false)}
                 />
               )}
-              {/* <Link
-                href="https://pcf.pxv.mybluehost.me/sagalbillboards"
+              <Link
+                href="https://billboard.sagaljet.net/"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="shrink-0"
               >
                 <Button className="whitespace-nowrap text-xs sm:text-sm">
                   Book a Billboard/Tent
                 </Button>
-              </Link> */}
+              </Link>
             </div>
 
             {/* Right Side Controls */}
@@ -190,13 +191,14 @@ export default function Navbar() {
                         onProductSelect={() => setIsOpen(false)}
                       />
                     )}
-                    {/* <Link
-                      href="https://pcf.pxv.mybluehost.me"
+                    <Link
+                      href="https://billboard.sagaljet.net/"
                       target="_blank"
+                      rel="noopener noreferrer"
                       onClick={() => setIsOpen(false)}
                     >
                       <Button className="w-full">Book a Billboard/Tent</Button>
-                    </Link> */}
+                    </Link>
                   </div>
 
                   {/* Scrollable Content Area */}
